@@ -12,7 +12,7 @@ from app.database.base import Base
 class Entry(Base):
     __tablename__ = "entries"
 
-    __table_args__ = UniqueConstraint("user_id", "media_id")
+    __table_args__ = (UniqueConstraint("user_id", "media_id"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
