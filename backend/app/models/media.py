@@ -15,4 +15,4 @@ class Media(Base):
 
     type: Mapped[str] = mapped_column(String(50), nullable=False)
 
-    entry: Mapped[list[Entry]] = relationship(back_populates="media")
+    entries: Mapped[list[Entry]] = relationship(back_populates="media")
