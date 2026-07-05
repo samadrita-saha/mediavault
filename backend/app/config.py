@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     database_url: str
 
     model_config = SettingsConfigDict(
-        env_file=Path(__file__).parent.parent.parent.parent / ".env",
+        env_file=Path(__file__).parent.parent.parent / ".env",
         extra="ignore",
     )
 
