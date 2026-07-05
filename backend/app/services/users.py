@@ -1,9 +1,15 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.auth.hashing import hash_password
+from app.auth.hashing import hash_password, verify_password
+from app.auth.jwt import create_access_token
 from app.models.user import User
-from app.schemas.user import RegisterRequest, RegisterResponse
+from app.schemas.user import (
+    LoginRequest,
+    LoginResponse,
+    RegisterRequest,
+    RegisterResponse,
+)
 
 
 def register_user(user: RegisterRequest, db: Session) -> RegisterResponse:
@@ -25,3 +31,13 @@ def register_user(user: RegisterRequest, db: Session) -> RegisterResponse:
     return RegisterResponse(
         id=new_user.id, username=new_user.username, email=new_user.email
     )
+
+
+def login_user(user: LoginRequest, db: Session) -> LoginResponse:
+    user_db = db.query(User).filter(User.username == user.username).first()
+    if user_db is None or not verify_password(user.password, user_db.password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    access_token = create_access_token({"sub": str(user_db.id)})
+
+    return LoginResponse(access_token=access_token, token_type="bearer")
