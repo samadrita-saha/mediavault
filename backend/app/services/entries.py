@@ -1,19 +1,20 @@
 from sqlalchemy.orm import Session
 
 from app.models.entry import Entry
+from app.models.user import User
 from app.schemas.entry import EntryCreate, EntryResponse
 
 
-def create_entry(entry: EntryCreate, db: Session) -> EntryResponse:
-    user_id = 1  # temporary
-
-    new_entry = Entry(user_id=user_id, media_id=entry.media_id, rating=entry.rating)
+def create_entry(entry: EntryCreate, current_user: User, db: Session) -> EntryResponse:
+    new_entry = Entry(
+        user_id=current_user.id, media_id=entry.media_id, rating=entry.rating
+    )
 
     db.add(new_entry)
     db.commit()
     db.refresh(new_entry)
 
-    entry_response = EntryResponse(
+    return EntryResponse(
         entry_id=new_entry.id,
         media_name=new_entry.media.name,
         media_type=new_entry.media.type,
@@ -21,11 +22,9 @@ def create_entry(entry: EntryCreate, db: Session) -> EntryResponse:
         date_added=new_entry.date_added,
     )
 
-    return entry_response
 
-
-def get_entries(user_id: int, db: Session) -> list[EntryResponse]:
-    entries = db.query(Entry).filter(Entry.user_id == user_id).all()
+def get_entries(current_user: User, db: Session) -> list[EntryResponse]:
+    entries = db.query(Entry).filter(Entry.user_id == current_user.id).all()
 
     responses = []
     for entry in entries:
