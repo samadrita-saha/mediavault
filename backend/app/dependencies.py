@@ -26,7 +26,7 @@ def get_current_user(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ) -> User:
     credentials_exception = HTTPException(
-        status_code=401, details="Could not validate credentials"
+        status_code=401, detail="Could not validate credentials"
     )
 
     try:
