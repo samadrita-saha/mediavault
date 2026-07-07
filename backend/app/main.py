@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from scalar_fastapi import get_scalar_api_reference
 
-from app.routers import entries, users
+from app.routers import entries, search, users
 
 app = FastAPI()
 
@@ -18,3 +18,4 @@ def scalar_root():
 
 app.include_router(entries.router)
 app.include_router(users.router)
+app.include_router(search.router)
