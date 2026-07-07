@@ -8,7 +8,7 @@ from app.config import settings
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(
-        minutes=settings.access_token_expire_mins
+        minutes=settings.access_token_expire_minutes
     )
 
     to_encode["exp"] = expire
