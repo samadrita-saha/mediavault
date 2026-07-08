@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.auth.hashing import hash_password, verify_password
@@ -13,11 +14,11 @@ from app.schemas.user import (
 
 
 def register_user(user: RegisterRequest, db: Session) -> RegisterResponse:
-    existing_user = db.query(User).filter(User.username == user.username).first()
+    existing_user = db.scalar(select(User).where(User.username == user.username))
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already exists")
 
-    existing_email = db.query(User).filter(User.email == user.email).first()
+    existing_email = db.scalar(select(User).where(User.email == user.email))
     if existing_email:
         raise HTTPException(status_code=400, detail="Email already registered")
 
@@ -34,7 +35,7 @@ def register_user(user: RegisterRequest, db: Session) -> RegisterResponse:
 
 
 def login_user(user: LoginRequest, db: Session) -> LoginResponse:
-    user_db = db.query(User).filter(User.username == user.username).first()
+    user_db = db.scalar(select(User).where(User.username == user.username))
     if user_db is None or not verify_password(user.password, user_db.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
