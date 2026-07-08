@@ -1,10 +1,25 @@
 from datetime import datetime
+from enum import Enum
 
 from pydantic import BaseModel, Field
 
 
+class MediaSource(str, Enum):
+    TMDB = "tmdb"
+    GOOGLE_BOOKS = "google_books"
+
+
+class MediaType(str, Enum):
+    BOOK = "book"
+    TV = "tv"
+    MOVIE = "movie"
+
+
 class EntryCreate(BaseModel):
-    media_id: int
+    external_id: str
+    source: MediaSource
+    name: str
+    type: MediaType
     rating: int = Field(ge=1, le=5)
 
 
