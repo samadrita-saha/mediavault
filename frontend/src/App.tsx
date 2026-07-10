@@ -1,5 +1,11 @@
+import { Button } from "@/components/ui/button";
+
 function App() {
-  return <h1 className="text-5xl font-bold text-blue-600">MediaVault</h1>;
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <Button>Hello MediaVault</Button>
+    </div>
+  );
 }
 
 export default App;
