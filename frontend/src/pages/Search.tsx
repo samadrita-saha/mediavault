@@ -1,3 +1,10 @@
+import Navbar from "@/components/layout/Navbar";
+
 export default function Search() {
-  return <h1>Search</h1>
+  return (
+    <>
+      <Navbar />
+      <h1>Search</h1>
+    </>
+  );
 }
