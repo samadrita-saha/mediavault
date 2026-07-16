@@ -24,9 +24,13 @@ export default function Landing() {
           again.
         </p>
 
-        <div className="mt-12">
+        <div className="mt-12 flex items-center justify-center gap-4">
           <Button size="lg" asChild>
-            <Link to="/register">Get Started</Link>
+            <Link to="/register">Sign Up</Link>
+          </Button>
+
+          <Button size="lg" variant="outline" asChild>
+            <Link to="/login">Log In</Link>
           </Button>
         </div>
       </div>
