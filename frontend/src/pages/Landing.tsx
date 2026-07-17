@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 export default function Landing() {
   return (
     <main className="relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden bg-background px-6">
-      {/* Background Glow */}
       <div className="absolute left-1/2 top-1/2 -z-10 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-linear-to-r from-[#D60270] via-[#9B4F96] to-[#0038A8] opacity-20 blur-3xl" />
 
       <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
@@ -24,7 +23,7 @@ export default function Landing() {
           again.
         </p>
 
-        <div className="mt-12 flex items-center justify-center gap-4">
+        <div className="mt-12 flex gap-4">
           <Button size="lg" asChild>
             <Link to="/register">Sign Up</Link>
           </Button>
