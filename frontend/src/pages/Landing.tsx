@@ -12,26 +12,25 @@ export default function Landing() {
             MediaVault
           </span>
         </h1>
-
         <p className="mt-8 text-2xl font-semibold text-foreground sm:text-3xl">
           One home for every story you love.
         </p>
-
         <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
           Keep track of your favorite books, movies and TV shows, rate them,
           organize your collection, and never lose your next recommendation
           again.
         </p>
-
         <div className="mt-12 flex gap-4">
-          <Button size="lg" asChild>
-            <Link to="/register">Sign Up</Link>
-          </Button>
+          <Link to="/register">
+            <Button size="lg">Sign Up</Button>
+          </Link>
 
-          <Button size="lg" variant="outline" asChild>
-            <Link to="/login">Log In</Link>
-          </Button>
-        </div>
+          <Link to="/login">
+            <Button size="lg" variant="outline">
+              Log In
+            </Button>
+          </Link>
+        </div>{" "}
       </div>
     </main>
   );
