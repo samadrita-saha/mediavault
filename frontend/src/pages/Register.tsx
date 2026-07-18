@@ -1,5 +1,6 @@
 import api from "@/lib/api";
-import { useState } from "react";
+import axios from "axios";
+import { useState, type SubmitEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +21,7 @@ export default function Register() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -37,7 +38,12 @@ export default function Register() {
 
       navigate("/login");
     } catch (error) {
-      console.error(error);
+      if (axios.isAxiosError(error))
+        alert(
+          error.response?.data.detail ??
+            "Registration failed. Please try again.",
+        );
+      else alert("Registration failed. Please try again.");
     }
   };
 
