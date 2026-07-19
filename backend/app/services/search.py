@@ -8,13 +8,15 @@ TMDB_MOVIE_URL = "https://api.themoviedb.org/3/search/movie"
 TMDB_TV_URL = "https://api.themoviedb.org/3/search/tv"
 
 
-def search_media(query: str, type: str) -> list[SearchResponse]:
+def search_media(
+    query: str, type: str, limit: int, offset: int
+) -> list[SearchResponse]:
     if type == "book":
-        return search_google_books(query)
-    return search_tmdb(query, type)
+        return search_google_books(query, limit, offset)
+    return search_tmdb(query, type, limit, offset)
 
 
-def search_google_books(query: str) -> list[SearchResponse]:
+def search_google_books(query: str, limit: int, offset: int) -> list[SearchResponse]:
     response = httpx.get(
         GOOGLE_BOOKS_URL, params={"q": query, "key": settings.google_books_api_key}
     )
@@ -22,7 +24,7 @@ def search_google_books(query: str) -> list[SearchResponse]:
     data = response.json()
     results = []
 
-    for item in data.get("items", []):
+    for item in data.get("items", [])[offset : offset + limit]:
         volume_info = item.get("volumeInfo", {})
 
         authors = volume_info.get("authors", [])
@@ -44,7 +46,7 @@ def search_google_books(query: str) -> list[SearchResponse]:
     return results
 
 
-def search_tmdb(query: str, type: str) -> list[SearchResponse]:
+def search_tmdb(query: str, type: str, limit: int, offset: int) -> list[SearchResponse]:
     headers = {"Authorization": f"Bearer {settings.tmdb_read_access_token}"}
 
     if type == "movie":
@@ -57,7 +59,7 @@ def search_tmdb(query: str, type: str) -> list[SearchResponse]:
     data = response.json()
     results = []
 
-    for result in data.get("results", []):
+    for result in data.get("results", [])[offset : offset + limit]:
         if type == "movie":
             name = result.get("title")
 

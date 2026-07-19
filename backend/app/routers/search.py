@@ -9,5 +9,7 @@ router = APIRouter(prefix="/search", tags=["Search"])
 
 
 @router.get("/", response_model=list[SearchResponse])
-def search_media(query: str, type: Literal["book", "movie", "tv"]):
-    return search_media_service(query, type)
+def search_media(
+    query: str, type: Literal["book", "movie", "tv"], limit: int = 5, offset: int = 0
+):
+    return search_media_service(query, type, limit, offset)
