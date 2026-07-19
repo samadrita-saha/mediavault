@@ -24,14 +24,20 @@ def search_google_books(query: str) -> list[SearchResponse]:
 
     for item in data.get("items", []):
         volume_info = item.get("volumeInfo", {})
-        image_links = volume_info.get("imageLinks", {})
+
+        authors = volume_info.get("authors", [])
+        creator = authors[0] if authors else None
+
+        image = volume_info.get("imageLinks", {}).get("thumbnail")
+
         results.append(
             SearchResponse(
                 external_id=item.get("id"),
                 source="google_books",
-                name=item.get("volumeInfo", {}).get("title"),
+                name=volume_info.get("title"),
                 type="book",
-                image=image_links.get("thumbnail"),
+                creator=creator,
+                image=image,
             )
         )
 
@@ -54,8 +60,32 @@ def search_tmdb(query: str, type: str) -> list[SearchResponse]:
     for result in data.get("results", []):
         if type == "movie":
             name = result.get("title")
+
+            credits_response = httpx.get(
+                f"https://api.themoviedb.org/3/movie/{result['id']}/credits",
+                headers=headers,
+            )
+            credits_response.raise_for_status()
+
+            crew = credits_response.json().get("crew", [])
+            director = next(
+                (member for member in crew if member.get("job") == "Director"),
+                None,
+            )
+            creator = director.get("name") if director else None
+
         else:
             name = result.get("name")
+
+            tv_response = httpx.get(
+                f"https://api.themoviedb.org/3/tv/{result['id']}",
+                headers=headers,
+            )
+            tv_response.raise_for_status()
+
+            tv_data = tv_response.json()
+            created_by = tv_data.get("created_by", [])
+            creator = created_by[0].get("name") if created_by else None
 
         poster = result.get("poster_path")
         image = f"https://image.tmdb.org/t/p/w342{poster}" if poster else None
@@ -66,6 +96,7 @@ def search_tmdb(query: str, type: str) -> list[SearchResponse]:
                 source="tmdb",
                 name=name,
                 type=type,
+                creator=creator,
                 image=image,
             )
         )

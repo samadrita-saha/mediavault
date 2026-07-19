@@ -6,4 +6,5 @@ class SearchResponse(BaseModel):
     source: str
     name: str
     type: str
+    creator: str | None = None
     image: str | None = None
