@@ -10,6 +10,8 @@ type Entry = {
   media_name: string;
   media_type: string;
   rating: number;
+  creator: string | null;
+  image: string | null;
   date_added: string;
 };
 
@@ -116,22 +118,38 @@ export default function Dashboard() {
           </Button>
         </div>
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredEntries.map((entry) => (
             <Card key={entry.entry_id}>
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold">{entry.media_name}</h2>
+              <CardContent className="p-4">
+                {entry.image ? (
+                  <img
+                    src={entry.image}
+                    alt={entry.media_name}
+                    className="mb-4 h-72 w-full rounded-md object-cover"
+                  />
+                ) : (
+                  <div className="mb-4 h-72 w-full rounded-md bg-muted" />
+                )}
 
-                <p className="mt-1 text-sm text-muted-foreground">
+                <h2 className="line-clamp-1 text-lg font-semibold">
+                  {entry.media_name}
+                </h2>
+
+                <p className="line-clamp-1 text-sm text-muted-foreground">
+                  {entry.creator}
+                </p>
+
+                <p className="mt-1 text-sm capitalize text-muted-foreground">
                   {entry.media_type}
                 </p>
 
-                <p className="mt-4 text-lg">
+                <p className="mt-3 text-lg">
                   {"★".repeat(entry.rating)}
                   {"☆".repeat(5 - entry.rating)}
                 </p>
 
-                <p className="mt-2 text-sm text-muted-foreground">
+                <p className="mt-2 text-xs text-muted-foreground">
                   Added {new Date(entry.date_added).toLocaleDateString("en-GB")}
                 </p>
               </CardContent>
