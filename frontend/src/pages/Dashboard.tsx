@@ -19,6 +19,12 @@ export default function Dashboard() {
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [filter, setFilter] = useState("all");
+
+  const filteredEntries =
+    filter === "all"
+      ? entries
+      : entries.filter((entry) => entry.media_type === filter);
 
   const fetchEntries = async () => {
     try {
@@ -83,14 +89,34 @@ export default function Dashboard() {
         </div>
 
         <div className="mb-8 flex gap-3">
-          <Button>All</Button>
-          <Button variant="outline">Movies</Button>
-          <Button variant="outline">TV Shows</Button>
-          <Button variant="outline">Books</Button>
+          <Button
+            variant={filter === "all" ? "default" : "outline"}
+            onClick={() => setFilter("all")}
+          >
+            All
+          </Button>
+          <Button
+            variant={filter === "movie" ? "default" : "outline"}
+            onClick={() => setFilter("movie")}
+          >
+            Movies
+          </Button>
+          <Button
+            variant={filter === "tv" ? "default" : "outline"}
+            onClick={() => setFilter("tv")}
+          >
+            TV Shows
+          </Button>
+          <Button
+            variant={filter === "book" ? "default" : "outline"}
+            onClick={() => setFilter("book")}
+          >
+            Books
+          </Button>
         </div>
 
         <div className="space-y-4">
-          {entries.map((entry) => (
+          {filteredEntries.map((entry) => (
             <Card key={entry.entry_id}>
               <CardContent className="p-6">
                 <h2 className="text-xl font-semibold">{entry.media_name}</h2>
