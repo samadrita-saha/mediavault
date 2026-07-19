@@ -1,3 +1,4 @@
+import api from "@/lib/api";
 import { useState } from "react";
 import { Star } from "lucide-react";
 
@@ -32,6 +33,20 @@ export default function RatingDialog({
   const [rating, setRating] = useState(0);
 
   if (!result) return null;
+
+  const handleAdd = async () => {
+    try {
+      await api.post("/entries", {
+        external_id: result.external_id,
+        source: result.source,
+        name: result.name,
+        type: result.type,
+        rating,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -76,7 +91,9 @@ export default function RatingDialog({
               Cancel
             </Button>
 
-            <Button disabled={rating === 0}>Add</Button>
+            <Button disabled={rating === 0} onClick={handleAdd}>
+              Add
+            </Button>
           </div>
         </div>
       </DialogContent>
