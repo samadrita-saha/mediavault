@@ -20,6 +20,8 @@ def create_entry(entry: EntryCreate, current_user: User, db: Session) -> EntryRe
             type=entry.type,
             external_id=entry.external_id,
             source=entry.source,
+            creator=entry.creator,
+            image=entry.image,
         )
 
         db.add(media)
