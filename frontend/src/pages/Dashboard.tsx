@@ -1,42 +1,36 @@
 import api from "@/lib/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import SearchSheet from "@/components/layout/SearchSheet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-const entries = [
-  {
-    title: "Hamnet",
-    type: "Movie",
-    rating: "★★★★★",
-    added: "Jul 12, 2026",
-  },
-  {
-    title: "Piranesi",
-    type: "Book",
-    rating: "★★★★★",
-    added: "Jul 10, 2026",
-  },
-  {
-    title: "One Day",
-    type: "TV Show",
-    rating: "★★★★★",
-    added: "Jul 8, 2026",
-  },
-  {
-    title: "The Bear",
-    type: "TV Show",
-    rating: "★★★★☆",
-    added: "Jul 5, 2026",
-  },
-];
+type Entry = {
+  entry_id: number;
+  media_name: string;
+  media_type: string;
+  rating: number;
+  date_added: string;
+};
 
 export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("movie");
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
+  const [entries, setEntries] = useState<Entry[]>([]);
+
+  useEffect(() => {
+    const fetchEntries = async () => {
+      try {
+        const response = await api.get("/entries");
+        setEntries(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchEntries();
+  }, []);
 
   const handleSearch = async () => {
     if (!search.trim()) return;
@@ -86,18 +80,21 @@ export default function Dashboard() {
 
         <div className="space-y-4">
           {entries.map((entry) => (
-            <Card key={entry.title}>
+            <Card key={entry.entry_id}>
               <CardContent className="p-6">
-                <h2 className="text-xl font-semibold">{entry.title}</h2>
+                <h2 className="text-xl font-semibold">{entry.media_name}</h2>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {entry.type}
+                  {entry.media_type}
                 </p>
 
-                <p className="mt-4 text-lg">{entry.rating}</p>
+                <p className="mt-4 text-lg">
+                  {"★".repeat(entry.rating)}
+                  {"☆".repeat(5 - entry.rating)}
+                </p>
 
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Added {entry.added}
+                  Added {new Date(entry.date_added).toLocaleDateString("en-GB")}
                 </p>
               </CardContent>
             </Card>
