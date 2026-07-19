@@ -1,5 +1,6 @@
 import { useState } from "react";
 import RatingDialog from "@/components/layout/RatingDialog";
+import { Button } from "@/components/ui/button";
 
 import {
   Sheet,
@@ -23,6 +24,8 @@ type SearchSheetProps = {
   onOpenChange: (open: boolean) => void;
   results: SearchResult[];
   onAddSuccess: () => void;
+  onLoadMore: () => void;
+  hasMore: boolean;
 };
 
 export default function SearchSheet({
@@ -30,6 +33,8 @@ export default function SearchSheet({
   onOpenChange,
   results,
   onAddSuccess,
+  onLoadMore,
+  hasMore,
 }: SearchSheetProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogResult, setDialogResult] = useState<SearchResult | null>(null);
@@ -44,12 +49,10 @@ export default function SearchSheet({
       <SheetContent className="w-125 sm:max-w-125">
         <SheetHeader>
           <SheetTitle>Search Results</SheetTitle>
-          <SheetDescription>
-            Select a rating and add media to your library.
-          </SheetDescription>
+          <SheetDescription>Rate and add to your library.</SheetDescription>
         </SheetHeader>
 
-        <div className="mt-6 h-[calc(100vh-120px)] space-y-4 overflow-y-auto pr-2">
+        <div className="mt-6 h-[calc(100vh-120px)] space-y-4 overflow-y-auto px-2">
           {results.map((result) => (
             <div
               key={`${result.source}-${result.external_id}`}
@@ -75,6 +78,12 @@ export default function SearchSheet({
               </div>
             </div>
           ))}
+
+          {hasMore && (
+            <Button onClick={onLoadMore} className="mt-4 w-full">
+              Load More
+            </Button>
+          )}
 
           <RatingDialog
             open={dialogOpen}

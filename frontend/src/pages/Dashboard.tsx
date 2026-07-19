@@ -22,6 +22,9 @@ export default function Dashboard() {
   const [open, setOpen] = useState(false);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [filter, setFilter] = useState("all");
+  const [currentQuery, setCurrentQuery] = useState("");
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   const filteredEntries =
     filter === "all"
@@ -54,12 +57,36 @@ export default function Dashboard() {
         params: {
           query: search,
           type: type,
+          limit: 5,
+          offset: 0,
         },
       });
 
       setResults(response.data);
+      setHasMore(response.data.length === 5);
+      setOffset(5);
       setOpen(true);
+      setCurrentQuery(search);
       setSearch("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLoadMore = async () => {
+    try {
+      const response = await api.get("/search", {
+        params: {
+          query: currentQuery,
+          type: type,
+          limit: 5,
+          offset: offset,
+        },
+      });
+
+      setResults((prev) => [...prev, ...response.data]);
+      setHasMore(response.data.length === 5);
+      setOffset((prev) => prev + 5);
     } catch (error) {
       console.log(error);
     }
@@ -80,6 +107,8 @@ export default function Dashboard() {
         onOpenChange={setOpen}
         results={results}
         onAddSuccess={handleAddSuccess}
+        onLoadMore={handleLoadMore}
+        hasMore={hasMore}
       />
 
       <main className="mx-auto max-w-4xl px-6 py-10">
