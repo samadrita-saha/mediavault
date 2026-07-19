@@ -20,6 +20,8 @@ class EntryCreate(BaseModel):
     source: MediaSource
     name: str
     type: MediaType
+    creator: str | None = None
+    image: str | None = None
     rating: int = Field(ge=1, le=5)
 
 
