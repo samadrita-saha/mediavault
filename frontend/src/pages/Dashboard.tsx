@@ -1,4 +1,7 @@
+import api from "@/lib/api";
+import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
+import SearchSheet from "@/components/layout/SearchSheet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -30,9 +33,40 @@ const entries = [
 ];
 
 export default function Dashboard() {
+  const [search, setSearch] = useState("");
+  const [type, setType] = useState("movie");
+  const [results, setResults] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const handleSearch = async () => {
+    if (!search.trim()) return;
+
+    try {
+      const response = await api.get("/search", {
+        params: {
+          query: search,
+          type: type,
+        },
+      });
+
+      setResults(response.data);
+      setOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <Navbar />
+      <Navbar
+        search={search}
+        setSearch={setSearch}
+        type={type}
+        setType={setType}
+        onSearch={handleSearch}
+      />
+
+      <SearchSheet open={open} onOpenChange={setOpen} results={results} />
 
       <main className="mx-auto max-w-4xl px-6 py-10">
         <div className="mb-8">
