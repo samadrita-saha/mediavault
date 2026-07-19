@@ -57,6 +57,7 @@ export default function Dashboard() {
 
       setResults(response.data);
       setOpen(true);
+      setSearch("");
     } catch (error) {
       console.log(error);
     }
