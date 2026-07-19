@@ -20,17 +20,23 @@ export default function Dashboard() {
   const [open, setOpen] = useState(false);
   const [entries, setEntries] = useState<Entry[]>([]);
 
+  const fetchEntries = async () => {
+    try {
+      const response = await api.get("/entries");
+      setEntries(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchEntries = async () => {
-      try {
-        const response = await api.get("/entries");
-        setEntries(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchEntries();
   }, []);
+
+  const handleAddSuccess = async () => {
+    setOpen(false);
+    await fetchEntries();
+  };
 
   const handleSearch = async () => {
     if (!search.trim()) return;
@@ -60,7 +66,12 @@ export default function Dashboard() {
         onSearch={handleSearch}
       />
 
-      <SearchSheet open={open} onOpenChange={setOpen} results={results} />
+      <SearchSheet
+        open={open}
+        onOpenChange={setOpen}
+        results={results}
+        onAddSuccess={handleAddSuccess}
+      />
 
       <main className="mx-auto max-w-4xl px-6 py-10">
         <div className="mb-8">

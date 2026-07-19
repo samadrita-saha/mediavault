@@ -23,12 +23,14 @@ type RatingDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   result: SearchResult | null;
+  onAddSuccess: () => void;
 };
 
 export default function RatingDialog({
   open,
   onOpenChange,
   result,
+  onAddSuccess,
 }: RatingDialogProps) {
   const [rating, setRating] = useState(0);
 
@@ -45,6 +47,7 @@ export default function RatingDialog({
       });
       setRating(0);
       onOpenChange(false);
+      onAddSuccess();
     } catch (error) {
       console.log(error);
     }

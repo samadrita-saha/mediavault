@@ -20,12 +20,14 @@ type SearchSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   results: SearchResult[];
+  onAddSuccess: () => void;
 };
 
 export default function SearchSheet({
   open,
   onOpenChange,
   results,
+  onAddSuccess,
 }: SearchSheetProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogResult, setDialogResult] = useState<SearchResult | null>(null);
@@ -63,6 +65,7 @@ export default function SearchSheet({
             open={dialogOpen}
             onOpenChange={setDialogOpen}
             result={dialogResult}
+            onAddSuccess={onAddSuccess}
           />
         </div>
       </SheetContent>
