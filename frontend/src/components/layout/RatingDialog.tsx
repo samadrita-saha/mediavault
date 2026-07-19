@@ -17,6 +17,8 @@ type SearchResult = {
   source: string;
   name: string;
   type: string;
+  creator: string | null;
+  image: string | null;
 };
 
 type RatingDialogProps = {
@@ -43,6 +45,8 @@ export default function RatingDialog({
         source: result.source,
         name: result.name,
         type: result.type,
+        creator: result.creator,
+        image: result.image,
         rating,
       });
       setRating(0);
@@ -68,7 +72,7 @@ export default function RatingDialog({
             <h2 className="text-xl font-semibold">{result.name}</h2>
 
             <p className="mt-1 capitalize text-muted-foreground">
-              {result.type}
+              {result.creator}
             </p>
           </div>
 

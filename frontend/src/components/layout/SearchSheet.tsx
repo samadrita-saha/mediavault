@@ -14,6 +14,7 @@ type SearchResult = {
   source: string;
   name: string;
   type: string;
+  creator: string | null;
   image: string | null;
 };
 
@@ -69,7 +70,7 @@ export default function SearchSheet({
                 <h3 className="font-semibold">{result.name}</h3>
 
                 <p className="text-sm capitalize text-muted-foreground">
-                  {result.type}
+                  {result.creator}
                 </p>
               </div>
             </div>
