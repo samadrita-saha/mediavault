@@ -169,10 +169,6 @@ export default function Dashboard() {
                   {entry.creator}
                 </p>
 
-                <p className="mt-1 text-sm capitalize text-muted-foreground">
-                  {entry.media_type}
-                </p>
-
                 <p className="mt-3 text-lg">
                   {"★".repeat(entry.rating)}
                   {"☆".repeat(5 - entry.rating)}
