@@ -43,6 +43,8 @@ export default function RatingDialog({
         type: result.type,
         rating,
       });
+      setRating(0);
+      onOpenChange(false);
     } catch (error) {
       console.log(error);
     }
