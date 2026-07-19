@@ -30,4 +30,6 @@ class EntryResponse(BaseModel):
     media_name: str
     media_type: str
     rating: int
+    creator: str | None = None
+    image: str | None = None
     date_added: datetime
