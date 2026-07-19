@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,12 @@ export default function Navbar({
   setType,
   onSearch,
 }: NavbarProps) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    navigate("/login");
+  };
   return (
     <nav className="border-b bg-background">
       <div className="flex h-16 items-center justify-between px-8">
@@ -34,7 +40,6 @@ export default function Navbar({
         >
           MediaVault
         </Link>
-
         <div className="mx-8 w-full max-w-3xl">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -75,8 +80,9 @@ export default function Navbar({
             </div>
           </div>
         </div>
-
-        <div className="font-medium text-foreground">User</div>
+        <Button onClick={() => handleLogout()} variant="ghost">
+          Log Out
+        </Button>{" "}
       </div>
     </nav>
   );
