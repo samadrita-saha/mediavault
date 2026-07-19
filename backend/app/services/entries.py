@@ -38,6 +38,8 @@ def create_entry(entry: EntryCreate, current_user: User, db: Session) -> EntryRe
         media_name=media.name,
         media_type=media.type,
         rating=new_entry.rating,
+        creator=media.creator,
+        image=media.image,
         date_added=new_entry.date_added,
     )
 
@@ -53,6 +55,8 @@ def get_entries(current_user: User, db: Session) -> list[EntryResponse]:
                 media_name=entry.media.name,
                 media_type=entry.media.type,
                 rating=entry.rating,
+                creator=entry.media.creator,
+                image=entry.media.image,
                 date_added=entry.date_added,
             )
         )
