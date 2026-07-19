@@ -14,6 +14,7 @@ type SearchResult = {
   source: string;
   name: string;
   type: string;
+  image: string | null;
 };
 
 type SearchSheetProps = {
@@ -47,20 +48,33 @@ export default function SearchSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="mt-6 h-[calc(100vh-120px)] overflow-y-auto space-y-4 pr-2">
+        <div className="mt-6 h-[calc(100vh-120px)] space-y-4 overflow-y-auto pr-2">
           {results.map((result) => (
             <div
               key={`${result.source}-${result.external_id}`}
               onClick={() => handleDialogOpen(result)}
-              className="cursor-pointer rounded-lg border p-4"
+              className="flex cursor-pointer gap-4 rounded-lg border p-4 transition-colors hover:bg-muted/50"
             >
-              <h3 className="font-semibold">{result.name}</h3>
+              {result.image ? (
+                <img
+                  src={result.image}
+                  alt={result.name}
+                  className="h-24 w-16 rounded-md object-cover"
+                />
+              ) : (
+                <div className="h-24 w-16 rounded-md bg-muted" />
+              )}
 
-              <p className="text-sm text-muted-foreground capitalize">
-                {result.type}
-              </p>
+              <div className="flex flex-col justify-center">
+                <h3 className="font-semibold">{result.name}</h3>
+
+                <p className="text-sm capitalize text-muted-foreground">
+                  {result.type}
+                </p>
+              </div>
             </div>
           ))}
+
           <RatingDialog
             open={dialogOpen}
             onOpenChange={setDialogOpen}

@@ -23,12 +23,15 @@ def search_google_books(query: str) -> list[SearchResponse]:
     results = []
 
     for item in data.get("items", []):
+        volume_info = item.get("volumeInfo", {})
+        image_links = volume_info.get("imageLinks", {})
         results.append(
             SearchResponse(
                 external_id=item.get("id"),
                 source="google_books",
                 name=item.get("volumeInfo", {}).get("title"),
                 type="book",
+                image=image_links.get("thumbnail"),
             )
         )
 
@@ -53,12 +56,17 @@ def search_tmdb(query: str, type: str) -> list[SearchResponse]:
             name = result.get("title")
         else:
             name = result.get("name")
+
+        poster = result.get("poster_path")
+        image = f"https://image.tmdb.org/t/p/w342{poster}" if poster else None
+
         results.append(
             SearchResponse(
                 external_id=str(result.get("id")),
                 source="tmdb",
                 name=name,
                 type=type,
+                image=image,
             )
         )
 
