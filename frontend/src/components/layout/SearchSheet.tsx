@@ -50,7 +50,7 @@ export default function SearchSheet({
             <div
               key={`${result.source}-${result.external_id}`}
               onClick={() => handleDialogOpen(result)}
-              className="rounded-lg border p-4"
+              className="cursor-pointer rounded-lg border p-4"
             >
               <h3 className="font-semibold">{result.name}</h3>
 
