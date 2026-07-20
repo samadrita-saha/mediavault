@@ -1,5 +1,6 @@
 import api from "@/lib/api";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import SearchSheet from "@/components/layout/SearchSheet";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,8 @@ export default function Dashboard() {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
+  const navigate = useNavigate();
+
   const filteredEntries =
     filter === "all"
       ? entries
@@ -41,8 +44,12 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("access_token")) {
+      navigate("/login");
+      return;
+    }
     fetchEntries();
-  }, []);
+  }, [navigate]);
 
   const handleAddSuccess = async () => {
     setOpen(false);
