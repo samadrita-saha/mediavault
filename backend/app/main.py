@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from scalar_fastapi import get_scalar_api_reference
@@ -14,10 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.get("/")
-def root():
-    return {"message": "Welcome to MediaVault!"}
+STATIC_DIR = Path(__file__).parent / "static"
 
 
 @app.get("/scalar", include_in_schema=False)
@@ -28,3 +27,5 @@ def scalar_root():
 app.include_router(entries.router)
 app.include_router(users.router)
 app.include_router(search.router)
+
+app.frontend("/", directory=STATIC_DIR)
