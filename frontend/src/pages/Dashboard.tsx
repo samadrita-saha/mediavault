@@ -16,10 +16,19 @@ type Entry = {
   date_added: string;
 };
 
+type SearchResult = {
+  external_id: string;
+  source: string;
+  name: string;
+  type: string;
+  creator: string | null;
+  image: string | null;
+};
+
 export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("movie");
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [open, setOpen] = useState(false);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [filter, setFilter] = useState("all");
