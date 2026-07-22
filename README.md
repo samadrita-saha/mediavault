@@ -1,125 +1,270 @@
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688)
+![React](https://img.shields.io/badge/React-19-61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791)
+![GitHub](https://img.shields.io/badge/GitHub-Repository-black?logo=github)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 # MediaVault
 
-A personal media tracking application where users can search for movies, TV shows, and books using TMDB and Google Books, add ratings, and maintain a personal media library. Selected media is stored locally in PostgreSQL for efficient retrieval.
+MediaVault is a full-stack web application for tracking books, movies, and TV shows. Inspired by platforms like Goodreads and Letterboxd, it provides a single place to discover, rate, and organize your favorite media. Users can search media using the TMDB and Google Books APIs, rate items, and maintain a personal library with secure JWT-based authentication.
 
-## Overview
+**Live Demo:** <https://app-mediavault.fastapicloud.dev/>
 
-```mermaid
-flowchart LR
-    User[Client]
-    API[FastAPI Backend]
-    DB[(PostgreSQL)]
-    TMDB[TMDB]
-    Books[Google Books]
-
-    User -->|Register / Login| API
-    API --> DB
-    API -->|JWT| User
-
-    User -->|Search| API
-    API --> TMDB
-    API --> Books
-
-    User -->|Add rating / View entries| API
-```
+---
 
 ## Features
 
-- User registration and JWT authentication
-- Search movies and TV shows via TMDB
-- Search books via Google Books
-- Store media metadata locally
-- Add ratings to media entries
-- Retrieve your personal media library
+- Search books, movies, and TV shows
+- Build a personal media library
+- Rate media on a 1–5 star scale
+- Prevent duplicate entries automatically
+- Secure JWT-based authentication
+- Responsive interface built with React
+- Production deployment using Docker and FastAPI Cloud
+
+---
+
+## Screenshots
+
+### Landing Page
+
+![Landing Page](assets/landing.jpg)
+
+### Dashboard
+
+![Dashboard](assets/dashboard.jpg)
+
+### Search
+
+![Search](assets/search.jpg)
+
+### Rating
+
+![Rating](assets/rating.jpg)
+
+---
 
 ## Tech Stack
 
-- **Framework:** FastAPI
-- **Database:** PostgreSQL
-- **Auth:** JWT tokens with Argon2 password hashing
-- **Migrations:** Alembic
-- **External APIs:** TMDB (movies/TV), Google Books API
+| Layer          | Technology                                                    |
+| -------------- | ------------------------------------------------------------- |
+| Frontend       | React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui           |
+| Backend        | FastAPI, Python 3.13                                          |
+| Database       | PostgreSQL 17, SQLAlchemy                                     |
+| Authentication | JWT, Argon2                                                   |
+| Migrations     | Alembic                                                       |
+| External APIs  | TMDB, Google Books API                                        |
+| Deployment     | Docker, FastAPI Cloud (Application), Supabase (PostgreSQL DB) |
 
-## Setup
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+
+Browser --> React["React Frontend (served by FastAPI)"]
+React --> API["FastAPI REST API"]
+
+API --> DB[("Supabase PostgreSQL")]
+API --> TMDB["TMDB API"]
+API --> Books["Google Books API"]
+```
+
+---
+
+## Project Structure
+
+```text
+mediavault/
+├── backend/
+│   ├── app/
+│   │   ├── auth/          # Authentication (JWT, password hashing)
+│   │   ├── database/      # Database configuration and session
+│   │   ├── models/        # SQLAlchemy models
+│   │   ├── routers/       # API endpoints
+│   │   ├── schemas/       # Pydantic models
+│   │   ├── services/      # Business logic
+│   │   ├── static/        # Production React build
+│   │   ├── config.py
+│   │   ├── dependencies.py
+│   │   └── main.py
+│   ├── alembic/           # Database migrations
+│   ├── Dockerfile
+│   └── pyproject.toml
+│
+├── frontend/
+│   ├── src/               # React application
+│   ├── public/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── docker-compose.yml
+├── .env.example
+├── LICENSE
+└── README.md
+```
+
+---
+
+## Quick Start
 
 ### Prerequisites
 
-- Python 3.13
-- PostgreSQL (via Docker or local install)
-- TMDB read access token
-- Google Books API key
+- Docker
+- TMDB Read Access Token
+- Google Books API Key
 
-### Environment
+### Environment Variables
 
-Create `backend/.env`:
+Create a `.env` file in the project root.
 
 ```env
-DATABASE_URL=postgresql+psycopg://mediavault:password@localhost:5432/mediavault
-SECRET_KEY=<random-secret>
-TMDB_READ_ACCESS_TOKEN=<your-token>
-GOOGLE_BOOKS_API_KEY=<your-key>
+POSTGRES_USER=mediavault
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=mediavault
+POSTGRES_PORT=5432
+
+DATABASE_URL=postgres+psycopg://mediavault:your_password@postgres:5432/mediavault
+
+SECRET_KEY=your_secret_key
+
+TMDB_READ_ACCESS_TOKEN=your_tmdb_token
+GOOGLE_BOOKS_API_KEY=your_google_books_api_key
 ```
 
 ### Run
 
 ```bash
-# Start the database
-docker compose up -d
-
-# Install dependencies
-cd backend
-uv sync
-
-# Run migrations
-alembic upgrade head
-
-# Start the server
-uvicorn app.main:app --reload
+docker compose up --build
 ```
 
-The API is available at `http://localhost:8000`. Interactive API documentation is available at `http://localhost:8000/scalar`.
+Run database migrations:
 
-## API Endpoints
+```bash
+docker compose exec backend alembic upgrade head
+```
 
-### Users
+Application URLs:
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/users/register` | Create an account |
-| POST | `/users/login` | Login and get a JWT token |
+| Service     | URL                          |
+| ----------- | ---------------------------- |
+| Application | http://localhost:8000        |
+| API Docs    | http://localhost:8000/scalar |
+
+---
+
+## REST API
+
+### Authentication
+
+| Method | Endpoint          |
+| ------ | ----------------- |
+| POST   | `/users/register` |
+| POST   | `/users/login`    |
+
+---
 
 ### Search
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/search/?query={q}&type={movie/tv/book}` | Search TMDB or Google Books |
+| Method | Endpoint  |
+| ------ | --------- |
+| GET    | `/search` |
 
-### Entries (authenticated)
+Query Parameters
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/entries/` | List your entries |
-| POST | `/entries/` | Add an entry with a rating (1-5) |
+| Name   | Description              |
+| ------ | ------------------------ |
+| query  | Search term              |
+| type   | `movie`, `tv`, or `book` |
+| limit  | Optional                 |
+| offset | Optional                 |
 
-All entry endpoints require a `Bearer <token>` Authorization header.
+---
 
+### Entries
 
-## Project Structure
+Requires
 
 ```
-mediavault/
-├── backend/
-│   ├── app/
-│   │   ├── auth/          # JWT and password hashing
-│   │   ├── database/      # DB engine, session, declarative base
-│   │   ├── models/        # SQLAlchemy models
-│   │   ├── routers/       # FastAPI route handlers
-│   │   ├── schemas/       # Pydantic request/response models
-│   │   ├── services/      # Business logic
-│   │   ├── config.py      # Application settings
-│   │   ├── dependencies.py# Shared dependencies
-│   │   └── main.py        # FastAPI app entry point
-│   ├── alembic/           # Database migrations
-│   └── pyproject.toml
-├── frontend/              # TODO
-└── docker-compose.yml
+Authorization: Bearer <JWT>
+```
+
+| Method | Endpoint   |
+| ------ | ---------- |
+| GET    | `/entries` |
+| POST   | `/entries` |
+
+Example Request
+
+```json
+{
+  "external_id": "12345",
+  "source": "tmdb",
+  "name": "Inception",
+  "type": "movie",
+  "creator": "Christopher Nolan",
+  "image": "...",
+  "rating": 5
+}
+```
+
+---
+
+## Database Design
+
+### User
+
+- id
+- username
+- email
+- password
+
+### Media
+
+- id
+- external_id
+- source
+- name
+- type
+- creator
+- image
+
+Unique Constraint
+
+```
+(external_id, source)
+```
+
+### Entry
+
+- id
+- user_id
+- media_id
+- rating
+- date_added
+
+Unique Constraint
+
+```
+(user_id, media_id)
+```
+
+---
+
+## Deployment
+
+MediaVault is deployed on FastAPI Cloud using Docker containers.
+
+The production application serves the React frontend directly from FastAPI, while PostgreSQL is hosted on Supabase.
+
+**Live Demo:** <https://app-mediavault.fastapicloud.dev/>
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
