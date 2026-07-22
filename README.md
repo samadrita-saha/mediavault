@@ -124,15 +124,17 @@ Create a `.env` file in the project root.
 
 ```env
 POSTGRES_USER=mediavault
-POSTGRES_PASSWORD=your_password
+POSTGRES_PASSWORD=password
 POSTGRES_DB=mediavault
 POSTGRES_PORT=5432
 
-DATABASE_URL=postgres+psycopg://mediavault:your_password@postgres:5432/mediavault
+DATABASE_URL=postgres+psycopg://mediavault:password@postgres:5432/mediavault
 
 SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
 
-TMDB_READ_ACCESS_TOKEN=your_tmdb_token
+TMDB_READ_ACCESS_TOKEN=your_tmdb_read_access_token
 GOOGLE_BOOKS_API_KEY=your_google_books_api_key
 ```
 
