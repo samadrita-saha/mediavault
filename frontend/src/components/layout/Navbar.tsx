@@ -58,7 +58,14 @@ export default function Navbar({
             />
 
             <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-2 border-l pl-2">
-              <Select value={type} onValueChange={setType}>
+              <Select
+                value={type}
+                onValueChange={(value) => {
+                  if (value !== null) {
+                    setType(value);
+                  }
+                }}
+              >
                 <SelectTrigger className="h-8 w-28 border bg-background shadow-none">
                   <span className="text-sm">
                     {type === "movie" && "Movie"}
