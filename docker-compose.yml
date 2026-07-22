@@ -33,5 +33,19 @@ services:
     depends_on:
       - postgres
 
+  frontend:
+    build:
+      context: ./frontend
+
+    container_name: mediavault-frontend
+
+    restart: unless-stopped
+
+    ports:
+      - "5173:80"
+
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
