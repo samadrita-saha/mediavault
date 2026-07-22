@@ -161,56 +161,34 @@ Application URLs:
 
 ### Authentication
 
-| Method | Endpoint          |
-| ------ | ----------------- |
-| POST   | `/users/register` |
-| POST   | `/users/login`    |
-
----
+| Method | Endpoint          | Description                    |
+| ------ | ----------------- | ------------------------------ |
+| POST   | `/users/register` | Register a new user            |
+| POST   | `/users/login`    | Authenticate and receive a JWT |
 
 ### Search
 
-| Method | Endpoint  |
-| ------ | --------- |
-| GET    | `/search` |
+| Method | Endpoint  | Description                       |
+| ------ | --------- | --------------------------------- |
+| GET    | `/search` | Search books, movies, or TV shows |
 
-Query Parameters
+**Query Parameters**
 
-| Name   | Description              |
-| ------ | ------------------------ |
-| query  | Search term              |
-| type   | `movie`, `tv`, or `book` |
-| limit  | Optional                 |
-| offset | Optional                 |
-
----
+| Name     | Description              |
+| -------- | ------------------------ |
+| `query`  | Search term              |
+| `type`   | `book`, `movie`, or `tv` |
+| `limit`  | Optional                 |
+| `offset` | Optional                 |
 
 ### Entries
 
-Requires
+| Method | Endpoint   | Description                               |
+| ------ | ---------- | ----------------------------------------- |
+| GET    | `/entries` | Retrieve the authenticated user's library |
+| POST   | `/entries` | Add a new media entry                     |
 
-```
-Authorization: Bearer <JWT>
-```
-
-| Method | Endpoint   |
-| ------ | ---------- |
-| GET    | `/entries` |
-| POST   | `/entries` |
-
-Example Request
-
-```json
-{
-  "external_id": "12345",
-  "source": "tmdb",
-  "name": "Inception",
-  "type": "movie",
-  "creator": "Christopher Nolan",
-  "image": "...",
-  "rating": 5
-}
-```
+**Authentication:** `Authorization: Bearer <JWT>`
 
 ---
 
